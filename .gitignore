@@ -1,0 +1,9 @@
+# Don't track the React dependencies
+/client/node_modules
+# Ignore build files (optional)
+
+/client/build
+
+#ignore log files
+npm-debug.log
+.DS_Strore
