@@ -1,0 +1,21 @@
+nav {
+    background-color: #0d1117;
+    padding: 12px 24px;
+      box-shadow: 0 2px 6px rgba(0, 255, 255, 0.2); /* subtle glow */
+
+}
+
+nav a {
+    color:#00ffff;
+    text-decoration: none;
+    margin-right:20px;
+    font-weight: bold;
+    font-size: 17px;
+    transition: 0.3s ease;
+
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #39ff14;
+}

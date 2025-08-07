@@ -1,0 +1,33 @@
+.news-card{
+    background-color: #1c1c1c;
+    border: 1px solid #00ffff;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0.255.255.0.1);
+}
+
+.news-card h3 {
+    margin-top: 0;
+    font-size: 20px;
+
+}
+
+.news-card .meta {
+    font-size: 14px;
+    color:#aaa;
+    margin-bottom: 8px;
+}
+
+.news-card a {
+    color: #00ffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+.news-card a:hover {
+    text-decoration: underline;
+    color: #39ff14;
+}
