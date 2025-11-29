@@ -59,9 +59,9 @@ async function signup(req,res){
 
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = await createUser({username,email,passwordHash})
-    return res.status(201).json({user: newUser}
-        
-    );
+    const token = signJwt({id: newUser.id, email: newUser.email,
+        username:newUser.username, role:newUser.role})
+    return res.status(201).json({user: newUser, token:token});
 }
 
 module.exports = {login, signup};

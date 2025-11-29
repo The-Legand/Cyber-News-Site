@@ -31,7 +31,6 @@ async function createUser({username, email, passwordHash, role="user"}){
             "SELECT id, username, email,role, created_at FROM users WHERE id = ?",[response.insertId]
         );
         return rows[0];
-   
     }
 
 

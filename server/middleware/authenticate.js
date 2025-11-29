@@ -15,7 +15,7 @@ function authGuard(req,res,next){
         return next();
     }
     catch(err){
-        return res.status(401).json({e6rror:"Invalid or expired token"});
+        return res.status(401).json({error:"Invalid or expired token"});
     }
 }
 
