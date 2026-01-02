@@ -3,7 +3,66 @@ const {getUserAuthByEmail, createUser, getUserByEmail} = require("../models/user
 const {isEmail, isNonEmptyString, isStrongPassword} = require("../utils/validators");
 const {signJwt} = require("../utils/jwt");
 
+async function loginSession(req,res){
+    const { email, password} = req.body
 
+    if(!email || !password){
+        return res.status(400).json({error:"Email or password are required"
+        });
+    }
+
+    const user = await getUserAuthByEmail(email);
+
+    if(!user){
+        return res.status(401).json({error: "Invalid credentials"
+        });
+    }
+
+    const ok = await bcrypt.compare(password, user.password_hash);
+    if(!ok){
+        return res.status(401).json({error:"Invalid credentials"});
+
+    }
+
+    req.session.regenerate(err => {
+        if(err){
+            return res.status(500).json({error: "Session error"});
+        }
+
+        req.session.user = {
+            id: user.id,
+            role: user.role,
+            email: user.email,
+            username: user.username
+        };
+        res.status(200).json({message: "Logged in with session"});
+    });
+
+
+}
+
+async function logoutSession(req,res){
+    req.session.destroy((err)=>{
+        if (err) return res.status(500).json({error: "Logout failed"});
+
+        res.clearCookie("cybernews.sid",{
+            path: "/",
+            sameSite: "lax",
+            secure: false,
+            httpOnly: true,
+        });
+        return res.status(200).json({message: "Logged out session"});
+    });
+}
+async function meSession(req,res){
+
+    if(!req.session?.user){
+        return res.status(401).json({error:"Not authenticated"});
+    }
+   
+
+    return res.status(200).json({user: req.session.user});
+}
 async function login(req,res) {
     const body = req.body;
     const email = body.email;
@@ -64,4 +123,4 @@ async function signup(req,res){
     return res.status(201).json({user: newUser, token:token});
 }
 
-module.exports = {login, signup};
+module.exports = { login, signup, loginSession, logoutSession, meSession };

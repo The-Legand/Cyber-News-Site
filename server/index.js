@@ -4,11 +4,29 @@ const dotenv = require("dotenv");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const forumRouter = require("./routes/forum");
+const session = require("express-session");
+
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+})
+);
 app.use(express.json());
+app.use(session({
+    name: "cybernews.sid",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60
+    }
+}));
 
 app.use("/api/users",usersRouter);
 app.use("/api/auth",authRouter);

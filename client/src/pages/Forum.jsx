@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
 import './forum.css'
@@ -8,8 +8,7 @@ const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:3001"
 export default function Forum(){
     const [posts, setPosts] = useState([]);
     const [status, setStatus] = useState("loading");
-    const { isLoggedIn } = useAuth();
-
+    const { isLoggedIn, user } = useAuth();
 
     useEffect(()=>{
 
@@ -46,15 +45,17 @@ const imgFor = () =>
             </header>
             {posts.length===0?(<p>No posts yet.</p>):(
                 <ul className="postList">
-                    {posts.map((p)=>(
-                        <li key={p.id} className="postCard">
+                    {posts.map((p)=>{
+                          
+                        return <li key={p.id} className="postCard">
                             <img className="thumb" src={imgFor()} alt="" loading="lazy"/>
                             <h3 className="postTitle">{p.title}</h3>
                             <p className="postContent">{p.content}</p>
                             <small className="postMeta">by {p.author} • {new Date(p.created_at).toLocaleString()}</small>
-
+                            {(isLoggedIn&&(p.user_id == user?.id||user.role=='admin'))&&<Link   to={`${p.id}/edit`}>Edit</Link>}
+                            
                         </li>
-                    ))}
+})}
                 </ul>
             )}
         </main>

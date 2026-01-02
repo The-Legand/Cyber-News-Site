@@ -11,7 +11,7 @@ async function createPost({userId, title, content}){
 
 async function getAllPosts(){
     const [rows] = await db.query(
-        "SELECT p.id, p.title, p.content, p.created_at, p.updated_at, u.username AS author FROM posts p JOIN users u ON u.id = p.user_id ORDER BY p.created_at DESC"
+        "SELECT p.id, p.title, p.content,p.user_id, p.created_at, p.updated_at, u.username AS author FROM posts p JOIN users u ON u.id = p.user_id ORDER BY p.created_at DESC"
     );
     return rows;
 }

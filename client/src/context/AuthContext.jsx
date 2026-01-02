@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:3001";
 const AuthContext = createContext(null);
 
@@ -88,7 +88,8 @@ async function signup({username, email, password}) {
     localStorage.removeItem(STORAGE_KEY);
   }
 
-  async function authFetch(url, options = {}){
+  const authFetch = useCallback( 
+    async (url, options = {})=>{
     if(!token){
       throw new Error("Not authenticated");
     }
@@ -105,6 +106,7 @@ async function signup({username, email, password}) {
     let data;
     try{
       data = await res.json();
+      //console.log(data)
     }
     catch{
       data = null;
@@ -117,7 +119,9 @@ async function signup({username, email, password}) {
     }
 
     return data;
-  }
+  },
+  [token]
+);
   const value = {user,isLoggedIn: !!user,signup, login, logout, authFetch};
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

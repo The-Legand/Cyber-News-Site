@@ -14,7 +14,7 @@ function hasMinLength(minLength, string){
   return (string.trim().length >= minLength)
 } 
 
-function hasMaxLength(maxLength, string){
+function exceedsMaxLength(maxLength, string){
   return (string.trim().length>maxLength)
 }
-module.exports = {isNonEmptyString, isEmail, isStrongPassword, hasMinLength,hasMaxLength};
+module.exports = {isNonEmptyString, isEmail, isStrongPassword, hasMinLength,exceedsMaxLength};
