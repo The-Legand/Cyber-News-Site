@@ -89,21 +89,29 @@ async function signup({username, email, password}) {
   }
 
   const authFetch = useCallback( 
-    async (url, options = {})=>{
-    if(!token){
-      throw new Error("Not authenticated");
+    async (path, options = {})=>{
+    const headers = new Headers(options.headers || {});
+    headers.set("Accept", "application/json");
+
+    if(token){
+      headers.set("Authorization", `Bearer ${token}`);
     }
 
-    const res = await fetch(`${API_BASE}${url}`,{
+    const hasBody = options.body !== undefined && options.body !==null;
+    if (hasBody && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    const res = await fetch(`${API_BASE}${path}`,{
       ...options,
-      headers:{
-        ...options.headers,
-        "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`,
-      },
+      headers,
     });
 
-    let data;
+    const contentType = res.headers.get("Content-Type")||"";
+    const isJson = contentType.includes("application/json")
+    let data = null;
+
+    if (isJson){
     try{
       data = await res.json();
       //console.log(data)
@@ -111,10 +119,14 @@ async function signup({username, email, password}) {
     catch{
       data = null;
     }
+  }
 
     if(!res.ok){
       const msg = (data && (data.error || data.message))|| `HTTP ${res.status}`;
-      throw new Error(msg);
+      const err =  new Error(msg);
+      err.status = res.status;
+      err.data = data;
+      throw err;
        
     }
 

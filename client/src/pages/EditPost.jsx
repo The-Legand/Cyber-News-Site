@@ -14,8 +14,9 @@ export default function EditPost(){
 
         async function load() {
         try{
-            const post = await authFetch(`/api/forum/${id}`)
-            //console.log(post)
+            const data = await authFetch(`/api/forum/${id}`)
+
+            const post = data.post;
             setPostContent(post.content);
             setPostTitle(post.title)
         }   
@@ -38,8 +39,8 @@ export default function EditPost(){
                 method:"PUT",
                 body: JSON.stringify({title:postTitle,content:postContent}), 
             },)
-            console.log(result)
-            navigate(`/forum/${result.id}`,{
+            //console.log(result)
+            navigate(`/forum/${result.post.id}`,{
                 replace:true,
                 state: {
                     success: "Post updated sucessfuly"},
@@ -52,7 +53,7 @@ export default function EditPost(){
                 setError(err.message||'post update failed')
             }
             finally{
-                if(status==='saving') setStatus('idle');
+                setStatus('idle');
             }
             
         

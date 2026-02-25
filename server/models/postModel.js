@@ -41,4 +41,16 @@ async function deletePostById(id){
     console.log(result.affectedRows > 0);
     return result.affectedRows > 0;
 }
-module.exports = {createPost, getAllPosts, getPostById, updatePostById, deletePostById};
+
+async function incrementLike(id){
+    const [result] = db.query(
+        "UPDATE posts SET likes = likes +1 WHERE id =?",[id]
+    )
+    return result;
+}
+
+async function decrementLike(id){
+   const result = db.query( "UPDATE posts SET like = likes - 1 WHERE id=?",[id])
+   return result;
+}
+module.exports = {createPost, getAllPosts, getPostById, updatePostById, deletePostById, incrementLike, decrementLike};

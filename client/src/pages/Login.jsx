@@ -10,7 +10,8 @@ export default function Login(){
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/profile";
-  
+    const msg = location.state?.message;
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [status, setStatus] = useState("idle");
@@ -37,6 +38,8 @@ export default function Login(){
 
 
     return (
+        <>
+        {msg && <p className="info">{msg}</p>}
         <form onSubmit={handleSubmit}>
             <input
             type="email"
@@ -46,14 +49,17 @@ export default function Login(){
             required/>
         <input 
         type="password"
+        placeholder="Password"
         value={password}
         onChange={(e)=> setPassword(e.target.value)}
         required
         />
         <button type="submit" disabled={status==="loading"}>
+            {status==="loading" ? "Loggin in...":"Login"}
 
         </button>
-        {error &&<p>{error}</p>}
+        {error &&<p className="error">{error}</p>}
         </form>
+        </>
     );
 }

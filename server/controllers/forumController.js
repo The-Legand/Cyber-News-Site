@@ -1,4 +1,4 @@
-const {createPost, getAllPosts,getPostById, updatePostById, deletePostById} = require("../models/postModel")
+const {createPost, getAllPosts,getPostById, updatePostById, deletePostById, incrementLike, decrementLike} = require("../models/postModel")
 const {hasMinLength, exceedsMaxLength}= require("../utils/validators");
 
 async function createPostController(req,res){
@@ -32,7 +32,7 @@ async function getPostByIdController(req, res){
     if(!post){
         return res.status(404).json({error: "post not found"});
     }
-    return res.status(200).json(post);
+    return res.status(200).json({post});
 }
 
 async function updatePostController(req, res) {
@@ -61,14 +61,14 @@ async function updatePostController(req, res) {
     }
 
     if(!hasMinLength(15, content)){
-        return res.status(400).json({error:"Contenet must be at least 50 chars"});
+        return res.status(400).json({error:"Content must be at least 50 chars"});
     }
 
     const updated = await updatePostById(id, title, content);
     if(!updated){
         return res.status(500).json({error: "Update failed"});
     }
-    return res.status(200).json(updated);
+    return res.status(200).json({post: updated});
     }
 async function deletePostController(req, res){
     const id = Number(req.params.id);
@@ -94,5 +94,9 @@ async function deletePostController(req, res){
     return res.json({message: "Post deleted"});
 }
 
-
-module.exports = {createPostController, listPostsController, getPostByIdController, updatePostController, deletePostController};
+async function incrementLikeController(res, res){
+    const postId = Number(req.params.id);
+    const ok = incrementLike(id);
+    return res.json(ok)
+}
+module.exports = {createPostController, listPostsController, getPostByIdController, updatePostController, deletePostController, incrementLikeController, };
